@@ -16,10 +16,10 @@ const AddTask = ({ onCancel, onAddTask }) => {
   const [date, setDate] = useState(null);
   return (
     <div className="add-task-dialog">
-      <input value={task} onChange={(event) => setTask(event.target.value)} />
-      <div className="add-task-actions-container">
+      <input id="taskDia" value={task} onChange={(event) => setTask(event.target.value)} />
+      <div className="add-task-actions-container"><br></br>
         <div className="btns-container">
-          <button
+          <button id="add-task"
             disabled={!task}
             className="add-btn"
             onClick={() => {
@@ -30,7 +30,7 @@ const AddTask = ({ onCancel, onAddTask }) => {
           >
             Add Task
           </button>
-          <button
+          <button id="cancel"
             className="cancel-btn"
             onClick={() => {
               onCancel();
@@ -39,8 +39,8 @@ const AddTask = ({ onCancel, onAddTask }) => {
           >
             Cancel
           </button>
-        </div>
-        <div className="icon-container">
+        </div><br></br>
+        <div className="icon-container" ><br></br>
           <DayPickerInput
             onDayChange={(day) => setDate(day)}
             placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
@@ -62,10 +62,34 @@ const TASKS_HEADER_MAPPING = {
   INBOX: "Inbox",
   TODAY: "Today",
   NEXT_7: "Next 7 days",
+  NEXT_15: "Next 15 days",
+  NEXT_30: "Next 30 days",
+  NEXT_30m: "More than 30 days"
 };
 
 const TaskItems = ({ selectedTab, tasks }) => {
   let tasksToRender = [...tasks];
+  if (selectedTab === "NEXT_30m") {
+    tasksToRender = tasksToRender.filter(
+      (task) =>
+        isAfter(task.date, new Date()) &&
+        isBefore(task.date, addDays(new Date(), 99999))
+    );
+  }
+  if (selectedTab === "NEXT_30") {
+    tasksToRender = tasksToRender.filter(
+      (task) =>
+        isAfter(task.date, new Date()) &&
+        isBefore(task.date, addDays(new Date(), 30))
+    );
+  }
+  if (selectedTab === "NEXT_15") {
+    tasksToRender = tasksToRender.filter(
+      (task) =>
+        isAfter(task.date, new Date()) &&
+        isBefore(task.date, addDays(new Date(), 15))
+    );
+  }
   if (selectedTab === "NEXT_7") {
     tasksToRender = tasksToRender.filter(
       (task) =>
